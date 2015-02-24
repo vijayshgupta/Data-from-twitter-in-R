@@ -1,0 +1,51 @@
+#load the package
+library(twitteR)
+
+#enter your own from the dev.twitter.com application page
+consumer_key = "77rvrAt0raGJC8lAL2TXk8oFk" 	
+#enter your own from the dev.twitter.com application page
+consumer_secret = "JoXpzD8tOiQh0g85mu7PdaTNUfxniVU2r4T3YJi0tubCvriwao"
+
+# same for everyone
+AppOnlyAuthentication <- "https://api.twitter.com/oauth2/token”
+RequesTokenURL <- "https://api.twitter.com/oauth/request_token”
+AuthorizeURL <- "https://api.twitter.com/oauth/authorize”
+AccessTokenURL <- "https://api.twitter.com/oauth/access_token”
+#Authentication of twitter
+twitCred <- OAuthFactory$new(
+		             consumerKey=consumer_key,
+                             consumerSecret=consumer_secret,
+                             requestURL=RequesTokenURL,
+                             accessURL=AccessTokenURL,
+                             authURL=AuthorizeURL)
+
+library(RCurl)
+# Set SSL certs globally
+options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+
+# this will prompt you go to a URL, log into twitter, get the pin, then type it into the R console
+twitCred$handshake() 
+
+# save the workspace, and access later using the load() function
+save.image(file="twitter_cred.rdata")
+
+#gettweets
+#loads the workspace
+load(file="twitter_cred.rdata")
+
+#load the Twitter R package
+library(twitteR)
+
+# register this session with your Twitter app
+registerTwitterOAuth(twitCred)
+
+# pull down 100 tweets that contain Analytics
+tweets <- searchTwitter(searchString="Analytics“,
+			         n=100, since='2014-11-01',
+                                         until='2014-12-01')
+
+#print no. of tweets fetched
+print(paste("number of tweets:",length(tweets)))
+#convert to a dataframe
+tweetDF <- twListToDF(tweets)
+tweetDF # Print the data
