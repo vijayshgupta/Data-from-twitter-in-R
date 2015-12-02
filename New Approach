@@ -1,0 +1,21 @@
+library(twitteR)
+library(ROAuth)
+library(RCurl)
+library(httr)
+library(tm) 
+library(wordcloud)
+
+CUSTOMER_KEY <- "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+CUSTOMER_SECRET <- "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+ACCESS_TOKEN<-"326436-xxxxxxxxxxxxxxxxxxx"
+ACCESS_SECRET<-"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+options(httr_oauth_cache=T)  
+
+setup_twitter_oauth(CUSTOMER_KEY,CUSTOMER_SECRET,ACCESS_TOKEN,ACCESS_SECRET)
+
+#' pull down 500 tweets that contain KEYWORD
+tweets <- searchTwitter('KEYWORD',n=500)
+
+#'convert to a dataframe
+tweetDF <- twListToDF(tweets)
+tweetDF # Print the data
